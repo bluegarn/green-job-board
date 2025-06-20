@@ -1,3 +1,4 @@
+import config
 import re
 import json
 import time
@@ -12,23 +13,11 @@ from requests.exceptions import RequestException
 from typing import List, Optional, Dict, Any
 
 # --- Configuration ---
-TARGET_URL = "https://www.foundit.in/job"
-HEADERS = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Edge/109.0.1518.78",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 "
-    "(KHTML, like Gecko) Version/16.1 Safari/605.1.15",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0",
-    "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) "
-    "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1",
-]
-COMPANY_SELECTOR = "div.text-content-secondary.md\\!text-content-primary span"
-LOCATION_SELECTOR = "div.text-content-primary.flex.gap-4 a"
-DESCRIPTION_SELECTOR = "#jobDescription"
+TARGET_URL = config.TARGET_URL
+HEADERS = config.HEADERS
+COMPANY_SELECTOR = config.COMPANY_SELECTOR
+LOCATION_SELECTOR = config.LOCATION_SELECTOR
+DESCRIPTION_SELECTOR = config.DESCRIPTION_SELECTOR
 _ITEMLIST_RE = re.compile(r'\[1,"(\{.*?\"itemListElement\".*?\})"\]\)', re.DOTALL)
 
 def setup_logging() -> None:
@@ -194,7 +183,7 @@ def main() -> None:
         return
 
     all_jobs: List[Dict[str, Any]] = []
-    for idx, url in enumerate(job_urls[:3], start=1):
+    for idx, url in enumerate(job_urls[:config.MAX_JOBS] if config.MAX_JOBS else job_urls, start=1):
         full_url = url if url.startswith("http") else urljoin(TARGET_URL, url)
         logging.info(f"[{idx}/{len(job_urls)}] Scraping {full_url}")
         session.headers.update(get_random_headers())
