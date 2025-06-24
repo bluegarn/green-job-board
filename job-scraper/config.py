@@ -1,7 +1,8 @@
 # config.py
 
 # === Target site ===
-TARGET_URL = "https://www.foundit.in/job"
+# The initial URL for the first page of search results.
+TARGET_URL = "https://www.foundit.in/search/job"
 
 # === CSS Selectors ===
 TITLE_SELECTOR = "div.text-content-primary.md\\!text-2xl"
@@ -78,10 +79,22 @@ HEADERS = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0",
     "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Mobile Safari/537.36",
-    # Add more User-Agent strings here from reliable sources if needed
 ]
 
 # === Scraper Behaviour ===
-MAX_JOBS = 3  # limit jobs for testing; set to None to scrape all
+MAX_JOBS = 100 # limit jobs for testing; set to None to scrape all
 
+# Number of times to retry fetching a URL before giving up.
+MAX_RETRIES = 3
 
+# Pagination settings for path-based pagination like foundit.in
+# The base path for search results (e.g., "/search/job")
+# This is used to construct URLs like /search/job-2, /search/job-3 etc.
+PAGINATION_BASE_PATH = "/search/job"
+# The starting page number for the path logic.
+# For foundit, page 1 is "/search/job", and subsequent pages are "/search/job-2", "/search/job-3".
+# We handle page 1 (TARGET_URL) separately, then loop from PAGINATION_START_PAGE + 1.
+PAGINATION_START_PAGE = 1
+# Maximum number of pages to scrape. Set to None to scrape all.
+# Start with a small number (e.g., 5 or 10) for testing.
+MAX_PAGES = 5
