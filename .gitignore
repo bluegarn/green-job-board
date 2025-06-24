@@ -1,5 +1,6 @@
 # Python virtual environment
 .venv/
+venv/
 
 # Python cache files
 __pycache__/
@@ -8,3 +9,6 @@ __pycache__/
 # Operating System files
 .DS_Store # macOS
 Thumbs.db # Windows
+
+# Environment variables
+.env
