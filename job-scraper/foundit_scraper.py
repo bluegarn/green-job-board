@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup  # Beautiful Soup library for parsing HTML and XML
 from requests.adapters import HTTPAdapter  # Used for customizing HTTP session behavior (e.g., retries).
 from requests.exceptions import RequestException  # Base exception class for requests errors.
 from typing import List, Optional, Dict, Any  # Type hints for better code readability and maintainability.
+from database_manager import SupabaseManager # Import the new SupabaseManager for database interaction
 
 # --- Configuration ---
 # These variables are loaded from the 'config' module.
@@ -297,8 +298,18 @@ def main() -> None:
             logging.warning(f"Skipping job due to missing title: {full_url}")  # Logs a warning if title is missing.
 
     logging.info(f"Scraped {len(all_jobs)} jobs successfully.")  # Logs the total number of jobs scraped.
-    # Prints the collected job data in a pretty-printed JSON format.
-    print(json.dumps(all_jobs, indent=2, ensure_ascii=False))
+
+    # --- Database Insertion ---
+    db_manager = SupabaseManager()
+    if db_manager.connect(): # Attempt to connect to the database
+        logging.info(f"Attempting to insert {len(all_jobs)} scraped jobs into Supabase...")
+        inserted_count = db_manager.insert_jobs(all_jobs) # Insert the jobs
+        logging.info(f"Successfully inserted {inserted_count} jobs into Supabase.")
+        db_manager.close() # Always close the connection
+    else:
+        logging.error("Could not connect to Supabase. Jobs will not be saved to DB.")
+        # Optionally, you could print to console here if DB connection fails
+        print(json.dumps(all_jobs, indent=2, ensure_ascii=False)) # This line was commented out in previous update
 
 if __name__ == "__main__":
     # Ensures that the main() function is called only when the script is executed directly (not imported as a module).
