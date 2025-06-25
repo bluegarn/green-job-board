@@ -85,7 +85,7 @@ HEADERS = [
 MAX_JOBS = 100 # limit jobs for testing; set to None to scrape all
 
 # Number of times to retry fetching a URL before giving up.
-MAX_RETRIES = 3
+MAX_RETRIES = 10
 
 # Pagination settings for path-based pagination like foundit.in
 # The base path for search results (e.g., "/search/job")
@@ -97,4 +97,4 @@ PAGINATION_BASE_PATH = "/search/job"
 PAGINATION_START_PAGE = 1
 # Maximum number of pages to scrape. Set to None to scrape all.
 # Start with a small number (e.g., 5 or 10) for testing.
-MAX_PAGES = 5
+MAX_PAGES = 20
