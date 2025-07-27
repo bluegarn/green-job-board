@@ -1,4 +1,14 @@
-# Python
+# Python virtual environment
+.venv/
 venv/
+
+# Python cache files
 __pycache__/
+*.pyc
+
+# Operating System files
+.DS_Store # macOS
+Thumbs.db # Windows
+
+# Environment variables
 .env
